@@ -58,10 +58,11 @@ const searchFood = () => {
 const showResult = meals => {
     const resultShow = document.getElementById('show-result');
     meals.forEach(meal =>{
+        // console.log(meal);
         const div = document.createElement('div');
         div.classList.add('col');
         div.innerHTML = `         
-         <div class="card">
+         <div onclick="loadDetails(${meal.idMeal})" class="card">
              <img src="${meal.strMealThumb}" class="card-img-top" alt="...">
                  <div class="card-body">
                      <h5 class="card-title">${meal.strMeal}</h5>
@@ -70,4 +71,39 @@ const showResult = meals => {
          </div>`;
          resultShow.appendChild(div);
     })
+}
+
+const loadDetails = mealId => {
+    // console.log(mealId);
+    const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
+    fetch (url)
+    .then (res => res.json())
+    .then (data => displayDetail  (data.meals[0]))
+}
+
+const displayDetail = meal =>{
+    console.log(meal);
+    const showDetails = document.getElementById('show-details');
+    const div = document.createElement('div');
+    div.classList.add('card');
+    div.innerHTML = ` <div class="card mx-auto" style="width: 18rem;">
+                        <img src="${meal.strMealThumb}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                 <h5 class="card-title">${meal.strMeal}</h5>
+                                 <p class="card-text">${meal.strInstructions.slice(0,300)}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                            <li class="list-group-item">${meal.strIngredient1}</li>
+                            <li class="list-group-item">${meal.strIngredient2}</li>
+                            <li class="list-group-item">${meal.strIngredient3}</li>
+                            <li class="list-group-item">${meal.strIngredient4}</li>
+                            <li class="list-group-item">${meal.strIngredient5}</li>
+                            <li class="list-group-item">${meal.strIngredient6}</li>
+                            </ul>
+                         <div class="card-body">
+                            <a href="${meal.strSource}" class="card-link">Source</a>
+                            <a href="${meal.strYoutube}" class="card-link">Youtube</a>
+                         </div>
+                        </div>`;
+    showDetails.appendChild(div);
 }
